@@ -9,7 +9,6 @@ struct Contact {
     char phone[100];
 };
 
-// Function to input contacts
 int inputContacts(struct Contact contacts[], int *numContacts) {
     while (*numContacts < MAX_CONTACTS) {
         printf("\nEnter name (or 'quit' to exit): ");
@@ -29,7 +28,6 @@ int inputContacts(struct Contact contacts[], int *numContacts) {
     return *numContacts;
 }
 
-// Function to search for a contact
 void searchContact(const struct Contact contacts[], int numContacts) {
     char searchName[80];
     printf("\nEnter a name to search (or 'quit' to exit): ");
@@ -58,22 +56,21 @@ void searchContact(const struct Contact contacts[], int numContacts) {
     }
 }
 
-// Function to save contacts to a file
 void saveContacts(const struct Contact contacts[], int numContacts) {
     FILE *file = fopen("contacts.txt", "w");
     if (file == NULL) {
-        printf("Error opening file!\n");
+        printf("Error opening file for writing.\n");
         return;
     }
 
     for (int i = 0; i < numContacts; i++) {
         fprintf(file, "Name: %s\n", contacts[i].name);
         fprintf(file, "Phone: %s\n", contacts[i].phone);
-        fprintf(file, "\n");
+        fprintf(file, "==============================\n");
     }
 
     fclose(file);
-    printf("Contacts saved to 'contacts.txt'.\n");
+    printf("Contacts saved successfully!\n");
 }
 
 int main(void) {
@@ -82,13 +79,10 @@ int main(void) {
 
     printf("===== Contact Management System =====\n");
 
-    // Input contacts
     numContacts = inputContacts(contacts, &numContacts);
 
-    // Search for a contact
     searchContact(contacts, numContacts);
 
-    // Save contacts to a file
     saveContacts(contacts, numContacts);
 
     return 0;
