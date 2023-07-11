@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Contacts Management System</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <style>
+    body {
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("https://source.unsplash.com/random") no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+
+    .container {
+      margin-top: 100px;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.3);
+      padding: 20px;
+    }
+
+    .contact-list {
+      margin-top: 20px;
+    }
+
+    .contact-item {
+      cursor: pointer;
+    }
+
+    .contact-details {
+      margin-top: 20px;
+    }
+
+    .filter-input {
+      width: 200px;
+    }
+
+    /* Updated CSS */
+    .contact-item-text {
+      color: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Contacts Management System</h1>
+      <div id="contactForm">
+        <div class="mb-3">
+          <label for="nameInput" class="form-label">Name:</label>
+          <input type="text" class="form-control" id="nameInput" required>
+          <div class="invalid-feedback">Please enter a name.</div>
+        </div>
+        <div class="mb-3">
+          <label for="phoneInput" class="form-label">Phone:</label>
+          <input type="text" class="form-control" id="phoneInput" required>
+          <div class="invalid-feedback">Please enter a phone number.</div>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="addContact()">Add Contact</button>
+      </div>
+    </div>
+    <div id="contactList" class="contact-list">
+      <h3>Contact List:</h3>
+      <input type="text" class="form-control filter-input" id="filterInput" placeholder="Search contacts" oninput="filterContacts()">
+      <ul class="list-group" id="listGroup">
+      </ul>
+    </div>
+    <div id="contactDetails" class="contact-details">
+      <h3>Contact Details:</h3>
+      <div id="detailsName"></div>
+      <div id="detailsPhone"></div>
+    </div>
+  </div>
+
+  <script>
+    const MAX_CONTACTS = 10;
+    let contacts = [];
+
+    function addContact() {
+      const nameInput = document.getElementById('nameInput');
+      const phoneInput = document.getElementById('phoneInput');
+
+      if (!nameInput.checkValidity() || !phoneInput.checkValidity()) {
+        return;
+      }
+
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
+
+      const contact = {
+        name,
+        phone
+      };
+
+      contacts.push(contact);
+
+      nameInput.value = '';
+      phoneInput.value = '';
+
+      sortContacts();
+      displayContacts();
+    }
+
+    function displayContacts() {
+      const listGroup = document.getElementById('listGroup');
+      listGroup.innerHTML = '';
+
+      contacts.forEach((contact, index) => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('list-group-item', 'contact-item');
+        listItem.innerHTML = '<span class="contact-item-text">' + contact.name + '</span>';
+        listItem.addEventListener('click', () => showContactDetails(index));
+        listGroup.appendChild(listItem);
+      });
+    }
+
+    function showContactDetails(index) {
+      const detailsName = document.getElementById('detailsName');
+      const detailsPhone = document.getElementById('detailsPhone');
+
+      detailsName.textContent = 'Name: ' + contacts[index].name;
+      detailsPhone.textContent = 'Phone: ' + contacts[index].phone;
+    }
+
+    function filterContacts() {
+      const filterInput = document.getElementById('filterInput');
+      const filterValue = filterInput.value.toLowerCase();
+      const listGroup = document.getElementById('listGroup');
+      const contactItems = listGroup.getElementsByClassName('contact-item');
+
+      for (let i = 0; i < contactItems.length; i++) {
+        const contactName = contacts[i].name.toLowerCase();
+        if (contactName.includes(filterValue)) {
+          contactItems[i].style.display = 'block';
+        } else {
+          contactItems[i].style.display = 'none';
+        }
+      }
+    }
+
+    function sortContacts() {
+      contacts.sort((a, b) => a.name.localeCompare(b.name));
+    }
+  </script>
+</body>
+
+</html>
